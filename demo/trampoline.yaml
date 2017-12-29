@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: List
+items:
+- kind: Pod
+  apiVersion: v1
+  metadata:
+    name: trampoline
+  spec:
+    containers:
+    - name: socat
+      image: alpine/socat
+      imagePullPolicy: IfNotPresent
+      ports:
+      - containerPort: 26257
+        name: grpc
+      - containerPort: 8080
+        name: http
+      command:
+        - "/bin/sh"
+        - "-ecx"
+        - |
+          socat TCP4-LISTEN:8081,fork,reuseaddr TCP4:cockroachdemo:8081        &
+          
+          socat TCP4-LISTEN:8080,fork,reuseaddr TCP4:cockroachdb-public:8080   &
+          socat TCP4-LISTEN:26257,fork,reuseaddr TCP4:cockroachdb-public:26257

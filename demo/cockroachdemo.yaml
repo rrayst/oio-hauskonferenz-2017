@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: List
+items:
+- kind: Pod
+  apiVersion: v1
+  metadata:
+    name: cockroachdemo
+    labels:
+      app: cockroachdemo
+  spec:
+    containers:
+    - name: cockroachdemo
+      image: hub.predic8.de/cockroachdemo:latest
+      imagePullPolicy: Always
+      ports:
+      - containerPort: 8081
+        name: http
+    imagePullSecrets:
+    - name: p8-hub-credentials
+    terminationGracePeriodSeconds: 1
